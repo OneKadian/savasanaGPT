@@ -28,9 +28,6 @@ const Chat = (props: any) => {
   const textAreaRef = useAutoResizeTextArea();
   const bottomOfChatRef = useRef<HTMLDivElement>(null);
   const selectedModel = DEFAULT_OPENAI_MODEL;
-
-
-//   useEffect(() => {
 //   const initializeConversationId = async () => {
 //     // Function to generate a unique conversation ID
 //     const generateUniqueConversationId = () => {
@@ -99,104 +96,68 @@ useEffect(() => {
 
 }, [propConversationId, userId]);
 
-
-
-// Function to create a user if they don't exist
-const createUserIfNotExists = async (userId) => {
-  const { data, error } = await supabase
-    .from("users")
-    .select("user_id")
-    .eq("user_id", userId);
-
-  if (error) {
-    console.error("Error fetching user:", error);
-    return null;
-  }
-
-  if (data.length === 0) {
-    const { error: insertError } = await supabase
-      .from("users")
-      .insert({ user_id: userId });
-    if (insertError) {
-      console.error("Error creating user:", insertError);
-      return null;
-    }
-    console.log("User created:", userId);
-  }
-  return userId;
-};
-
-// Function to add a new conversation
-const addConversationWithMessages = async (userId, initialQuestion, initialAnswer) => {
-  // Ensure the user exists
-  await createUserIfNotExists(userId);
-
-  // Create the conversation
-  const { data: conversationData, error: conversationError } = await supabase
-    .from("conversations")
-    .insert({ user_id: userId })
-    .select();
-
-  if (conversationError || !conversationData) {
-    console.error("Error creating conversation:", conversationError);
-    return null;
-  }
-
-  const conversationId = conversationData[0].id;
-
-  // Add initial question and answer to the conversation in messages
-  const { error: messageError } = await supabase.from("messages").insert([
-    {
-      conversation_id: conversationId,
-      user_id: userId,
-      content: initialQuestion,
-      message_type: "question",
-    },
-    {
-      conversation_id: conversationId,
-      user_id: userId,
-      content: initialAnswer,
-      message_type: "answer",
-    },
-  ]);
-
-  if (messageError) {
-    console.error("Error adding messages:", messageError);
-    return null;
-  }
-
-  console.log("Conversation created with initial messages.");
-  return conversationId;
-};
-
-// Updated handleSubmit function
-// const handleSubmit = async (question, answer) => {
-//   try {
-//     const conversationId = await addConversationWithMessages(userId, question, answer);
-//     if (!conversationId) {
-//       console.error("Error: Conversation creation failed.");
-//     }
-//   } catch (error) {
-//     console.error("Error in handleSubmit:", error);
-//   }
-// };
-
 const handleSubmit = async (question, answer) => {
   try {
-    const conversationId = await addConversationWithMessages(userId, question, answer);
-    if (!conversationId) {
-      console.error("Error: Conversation creation failed.");
+    // Case 1: Existing conversation ID is provided
+    if (propConversationId) {
+      // Insert question and answer into a single row in the messages table
+      const { error: messageError } = await supabase.from("messages").insert({
+        conversation_id: propConversationId,
+        user_id: userId,
+        question: question,
+        answer: answer, 
+      });
+      if (messageError) throw new Error("Error inserting message into messages table");
+
+      console.log("Message with question and answer added to existing conversation.");
     } else {
-      setConversation([
-        ...conversation,
-        { question, answer },
-      ]);
+      // Case 2: New conversation ID, insert into both conversations and messages tables
+      // Check if conversation ID already exists in conversations table
+      const { data: existingConversations, error: selectError } = await supabase
+        .from("conversations")
+        .select("id")
+        .eq("id", conversationID);
+
+      if (selectError) throw new Error("Error fetching conversation data");
+
+      let newConversationId = conversationID;
+      if (existingConversations.length === 0) {
+        // Insert new conversation if it doesn't already exist
+        const { data: conversationData, error: insertError } = await supabase
+          .from("conversations")
+          .insert({
+            id: conversationID,
+            user_id: userId,
+            firstQuestion: question,
+          })
+          .select();
+        if (insertError || !conversationData) {
+          throw new Error("Error inserting new conversation");
+        }
+        newConversationId = conversationData[0].id;
+      }
+
+      // Insert both question and answer in a single row in the messages table
+      const { error: messageError } = await supabase.from("messages").insert({
+        conversation_id: newConversationId,
+        user_id: userId,
+        question: question,
+        answer: answer,
+      });
+      if (messageError) throw new Error("Error inserting message into messages table");
+
+      console.log("New conversation and message with question and answer added to database.");
     }
+
+    // Update the conversation state to include the new message
+    setConversation([
+      ...conversation,
+      { question, answer },
+    ]);
   } catch (error) {
     console.error("Error in handleSubmit:", error);
   }
 };
-
 
 const sendMessage = async (e) => {
   e.preventDefault();
@@ -257,12 +218,12 @@ const logConversationDetails = () => {
   console.log("Conversation ID:", conversationID);
 };
 
-  const handleKeypress = (e: any) => {
+const handleKeypress = (e: any) => {
     if (e.keyCode == 13 && !e.shiftKey) {
       sendMessage(e);
       e.preventDefault();
     }
-  };
+};
 
   return (
   <div className="flex max-w-full flex-1 flex-col">

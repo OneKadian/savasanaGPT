@@ -33,7 +33,7 @@ export default function Home() {
     };
     console.log(conversations)
     fetchConversations();
-  }, [userId]);
+  }, [userId, selectedConversationId]);
 
   const toggleComponentVisibility = () => {
     setIsComponentVisible(!isComponentVisible);
