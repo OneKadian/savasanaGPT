@@ -30,7 +30,31 @@ const Chat = (props: any) => {
   const selectedModel = DEFAULT_OPENAI_MODEL;
 
 
-  useEffect(() => {
+//   useEffect(() => {
+//   const initializeConversationId = async () => {
+//     // Function to generate a unique conversation ID
+//     const generateUniqueConversationId = () => {
+//       const randomDigits = Math.floor(1000 + Math.random() * 9000);
+//       return `${userId}-${randomDigits}`;
+//     };
+
+//     // Use the provided prop ID if available; otherwise, generate a new one
+//     let finalConversationId = propConversationId || generateUniqueConversationId();
+
+//     // Set the conversation ID in the state
+//     setconversationID(finalConversationId);
+
+//         // Adjust text area height
+//     if (textAreaRef.current) {
+//       textAreaRef.current.style.height = "24px";
+//       textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`;
+//     }
+//   };
+
+//   initializeConversationId();
+// }, [propConversationId, userId]);
+
+useEffect(() => {
   const initializeConversationId = async () => {
     // Function to generate a unique conversation ID
     const generateUniqueConversationId = () => {
@@ -38,13 +62,31 @@ const Chat = (props: any) => {
       return `${userId}-${randomDigits}`;
     };
 
-    // Use the provided prop ID if available; otherwise, generate a new one
     let finalConversationId = propConversationId || generateUniqueConversationId();
-
-    // Set the conversation ID in the state
     setconversationID(finalConversationId);
 
-        // Adjust text area height
+    if (propConversationId) {
+      // Fetch messages from the "messages" table only if `propConversationId` exists
+      const { data, error } = await supabase
+        .from("messages")
+        .select("question, answer")
+        .eq("conversation_id", finalConversationId)
+        .eq("user_id", userId);
+
+      if (error) {
+        console.error("Error fetching messages:", error);
+      } else if (data) {
+        // Format data into { question, answer } objects and set in conversation state
+        const formattedConversation = data.map((msg) => ({
+          question: msg.question,
+          answer: msg.answer,
+        }));
+        setConversation(formattedConversation);
+        setShowEmptyChat(false);
+      }
+    }
+
+    // Adjust text area height
     if (textAreaRef.current) {
       textAreaRef.current.style.height = "24px";
       textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`;
@@ -52,7 +94,11 @@ const Chat = (props: any) => {
   };
 
   initializeConversationId();
+  console.log(conversation)
+  console.log(conversationID)
+
 }, [propConversationId, userId]);
+
 
 
 // Function to create a user if they don't exist
@@ -124,16 +170,33 @@ const addConversationWithMessages = async (userId, initialQuestion, initialAnswe
 };
 
 // Updated handleSubmit function
+// const handleSubmit = async (question, answer) => {
+//   try {
+//     const conversationId = await addConversationWithMessages(userId, question, answer);
+//     if (!conversationId) {
+//       console.error("Error: Conversation creation failed.");
+//     }
+//   } catch (error) {
+//     console.error("Error in handleSubmit:", error);
+//   }
+// };
+
 const handleSubmit = async (question, answer) => {
   try {
     const conversationId = await addConversationWithMessages(userId, question, answer);
     if (!conversationId) {
       console.error("Error: Conversation creation failed.");
+    } else {
+      setConversation([
+        ...conversation,
+        { question, answer },
+      ]);
     }
   } catch (error) {
     console.error("Error in handleSubmit:", error);
   }
 };
+
 
 const sendMessage = async (e) => {
   e.preventDefault();
@@ -189,6 +252,11 @@ const sendMessage = async (e) => {
   }
 };
 
+const logConversationDetails = () => {
+  console.log("Conversation:", conversation);
+  console.log("Conversation ID:", conversationID);
+};
+
   const handleKeypress = (e: any) => {
     if (e.keyCode == 13 && !e.shiftKey) {
       sendMessage(e);
@@ -219,11 +287,11 @@ const sendMessage = async (e) => {
             {!showEmptyChat && conversation.length > 0 ? (
               <div className="flex flex-col items-center text-sm bg-gray-800">
                 <a 
-                onClick={() => { console.log(conversation); }}
-                className="flex py-3 px-3 items-center gap-3 rounded-md hover:bg-gray-500/10 transition-colors duration-200 text-white cursor-pointer text-sm mb-1 flex-shrink-0 border border-white/20">
-                  <AiOutlinePlus className="h-4 w-4" />
-                  New chat
-                </a>
+  onClick={logConversationDetails}
+  className="flex py-3 px-3 items-center gap-3 rounded-md hover:bg-gray-500/10 transition-colors duration-200 text-white cursor-pointer text-sm mb-1 flex-shrink-0 border border-white/20">
+  <AiOutlinePlus className="h-4 w-4" />
+  New chat
+</a>
                 {conversation.map((item, index) => (
                   <div key={index} className="flex flex-col w-full">
                     <Message message={{ content: item.question, role: "user" }} />
