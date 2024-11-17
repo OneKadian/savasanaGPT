@@ -19,21 +19,29 @@ export default function Home() {
   const [conversations, setConversations] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchConversations = async () => {
-      setIsLoading(true);
-      if (userId) {
-        const { data } = await supabase
-          .from("conversations")
-          .select("id")
-          .eq("user_id", userId);
-        setConversations(data || []);
+useEffect(() => {
+  const fetchConversations = async () => {
+    setIsLoading(true);
+    if (userId) {
+      const { data, error } = await supabase
+        .from("conversations")
+        .select("firstQuestion, id")  // Use comma-separated string here
+        .eq("user_id", userId);
+
+      if (error) {
+        console.error("Error fetching conversations:", error);
+        return;
       }
-      setIsLoading(false);
-    };
-    console.log(conversations)
-    fetchConversations();
-  }, [userId, selectedConversationId]);
+
+      setConversations(data || []);
+    }
+    setIsLoading(false);
+    console.log(conversations);
+  };
+
+  fetchConversations();
+}, [userId, selectedConversationId]);
+
 
   const toggleComponentVisibility = () => {
     setIsComponentVisible(!isComponentVisible);
@@ -62,12 +70,14 @@ export default function Home() {
       New Chat
     </a>
     {conversations.map((conversation) => (
-      <a
-  key={conversation.id}
-  onClick={() => setSelectedConversationId(conversation.id)} // Set selected conversation ID here
-  className="flex py-3 px-3 items-center gap-3 rounded-md hover:bg-gray-500/10 transition-colors duration-200 text-white cursor-pointer text-sm mb-1 flex-shrink-0 border border-white/20"
+<a
+  key={conversations.indexOf(conversation)}
+  onClick={() => setSelectedConversationId(conversation.id)}
+  className="flex py-3 px-3 items-center gap-3 rounded-md hover:bg-gray-500/10 transition-colors duration-200 text-white cursor-pointer text-sm mb-1 flex-shrink-0 border border-white/20 w-[98%] overflow-hidden whitespace-nowrap text-ellipsis"
 >
-  {conversation.id}
+  {conversation.firstQuestion.length > 30
+    ? `${conversation.firstQuestion.slice(0, 30)}...`
+    : conversation.firstQuestion}
 </a>
 
     ))}
