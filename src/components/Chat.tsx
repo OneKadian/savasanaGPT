@@ -43,6 +43,22 @@ const [isViewEditedModalOpen, setIsViewEditedModalOpen] = useState(false);
 const [viewEditedQuestion, setViewEditedQuestion] = useState("");
 const [viewEditedAnswer, setViewEditedAnswer] = useState("");
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const toggleModal = () => {
+    setIsModalOpen((prev) => !prev);
+  };
+
+const handleToggleExpand = (index) => {
+  setConversation((prevConversation) =>
+    prevConversation.map((item, idx) =>
+      idx === index
+        ? { ...item, isExpanded: !item.isExpanded } // Toggle the specific item's state
+        : item
+    )
+  );
+};
+
 
 useEffect(() => {
   const initializeConversationId = async () => {
@@ -391,7 +407,7 @@ const closeViewEditedModal = () => {
         <RxHamburgerMenu className="h-6 w-6 text-white" />
       </button>
       <h1 className="flex-1 text-center text-base font-normal">New chat</h1>
-      <button type="button" className="px-3">
+      <button type="button" className="px-3" >
         <BsPlusLg className="h-6 w-6" />
       </button>
     </div>
@@ -402,7 +418,8 @@ const closeViewEditedModal = () => {
             {!showEmptyChat && conversation.length > 0 ? (
               <div className="flex flex-col items-center text-sm bg-gray-800">
                 <a 
-  onClick={logConversationDetails}
+  // onClick={logConversationDetails}
+  onClick={toggleModal}
   className="flex py-3 mt-4 px-3 items-center gap-3 rounded-md hover:bg-gray-500/10 transition-colors duration-200 text-white cursor-pointer text-sm mb-1 flex-shrink-0 border border-white/20">
   {/* <AiOutlinePlus className="h-4 w-4" /> */}
   Visualizer
@@ -605,6 +622,71 @@ const closeViewEditedModal = () => {
   </div>
 )}
 
+{isModalOpen && (
+  <div className="fixed inset-0 z-50 flex justify-center items-center bg-gray-900 bg-opacity-50">
+    <div className="relative w-full max-w-2xl max-h-[80vh] overflow-auto bg-white rounded-lg shadow-lg p-5">
+      {/* Modal Header */}
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-xl font-semibold">Conversation Timeline</h3>
+        <button
+          onClick={toggleModal}
+          className="text-gray-400 hover:bg-gray-200 p-2 rounded-full"
+        >
+          <svg
+            className="w-4 h-4"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 14 14"
+          >
+            <path
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+            />
+          </svg>
+        </button>
+      </div>
+
+      {/* Modal Content */}
+      <ol className="relative border-l border-gray-200 dark:border-gray-700 pl-6">
+        {conversation.map((item, index) => (
+          <li key={index} className="mb-6 ml-6">
+            {/* Original Content */}
+            <h3 className="text-2xl font-semibold text-gray-900">
+              {item.question}
+            </h3>
+            <h2 className="text-xl text-gray-700 mt-2">{item.answer}</h2>
+
+            {/* View Edited Button */}
+            {!item.isExpanded && item.editedQuestion && (
+              <button
+                onClick={() => handleToggleExpand(index)}
+                className="mt-2 inline-block text-blue-500 underline"
+              >
+                View edited
+              </button>
+            )}
+
+            {/* Edited Content */}
+            {item.isExpanded && (
+              <div className="mt-4 pl-6 border-l border-green-500">
+                <h3 className="text-2xl font-semibold text-gray-900">
+                  {item.editedQuestion}
+                </h3>
+                <h2 className="text-xl text-gray-700 mt-2">
+                  {item.editedAnswer}
+                </h2>
+              </div>
+            )}
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+)}
+
     </div>
     
   );
@@ -612,5 +694,4 @@ const closeViewEditedModal = () => {
 };
 
 export default Chat;
-
 
