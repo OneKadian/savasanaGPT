@@ -23,7 +23,6 @@ const Sidebar = () => {
         <div className="flex-col flex-1 overflow-y-auto border-b border-white/20">
         </div>
   {!userId ? (
-
               <Link
         href="sign-in"
         className="flex py-3 px-3 items-center gap-3 rounded-md hover:bg-gray-500/10 transition-colors duration-200 text-white cursor-pointer text-sm">
