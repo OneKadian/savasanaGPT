@@ -35,7 +35,8 @@ const Chat = (props: any) => {
 const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 const [editQuestion, setEditQuestion] = useState("");
 const [newAnswer, setNewAnswer] = useState("");
-const [editingMessageId, setEditingMessageId] = useState(null);
+// Change the state declaration from null to string | null
+const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
 const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
 const [isGeneratingAnswer, setIsGeneratingAnswer] = useState(false);
 
@@ -49,7 +50,7 @@ const [viewEditedAnswer, setViewEditedAnswer] = useState("");
     setIsModalOpen((prev) => !prev);
   };
 
-const handleToggleExpand = (index) => {
+const handleToggleExpand = (index: number) => {
   setConversation((prevConversation) =>
     prevConversation.map((item, idx) =>
       idx === index
@@ -107,65 +108,9 @@ useEffect(() => {
   console.log(conversationID);
 
 }, [propConversationId, userId]);
-//   try {
-//     // Case 1: Existing conversation ID is provided
-//     if (propConversationId) {
-//       const { error: messageError } = await supabase.from("messages").insert({
-//         conversation_id: propConversationId,
-//         user_id: userId,
-//         question: question,
-//         answer: answer,
-//       });
-//       if (messageError) throw new Error("Error inserting message into messages table");
 
-//       console.log("Message with question and answer added to existing conversation.");
-//     } else {
-//       // Case 2: New conversation ID
-//       const { data: existingConversations, error: selectError } = await supabase
-//         .from("conversations")
-//         .select("id")
-//         .eq("id", conversationID);
 
-//       if (selectError) throw new Error("Error fetching conversation data");
-
-//       let newConversationId = conversationID;
-//       if (existingConversations.length === 0) {
-//         const { data: conversationData, error: insertError } = await supabase
-//           .from("conversations")
-//           .insert({
-//             id: conversationID,
-//             user_id: userId,
-//             firstQuestion: question,
-//           })
-//           .select();
-//         if (insertError || !conversationData) {
-//           throw new Error("Error inserting new conversation");
-//         }
-//         newConversationId = conversationData[0].id;
-//       }
-
-//       const { error: messageError } = await supabase.from("messages").insert({
-//         conversation_id: newConversationId,
-//         user_id: userId,
-//         question: question,
-//         answer: answer,
-//       });
-//       if (messageError) throw new Error("Error inserting message into messages table");
-
-//       console.log("New conversation and message with question and answer added to database.");
-//     }
-
-//     // Update the conversation state with the additional keys
-//     setConversation([
-//       ...conversation,
-//       { question, answer, editedQuestion: null, editedAnswer: null },
-//     ]);
-//   } catch (error) {
-//     console.error("Error in handleSubmit:", error);
-//   }
-// };
-
-const handleSubmit = async (question, answer) => {
+const handleSubmit = async (question: string, answer: string) => {
   try {
     let finalConversationId = propConversationId || conversationID;
 
@@ -223,13 +168,17 @@ const handleSubmit = async (question, answer) => {
       editedQuestion: null,
       editedAnswer: null,
     }));
-  } catch (error) {
-    console.error("Error in handleSubmit:", error);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    } else {
+      console.error('An unknown error occurred');
+    }
     throw error;
   }
 };
 
-const sendMessage = async (e) => {
+const sendMessage = async  (e: React.MouseEvent<HTMLButtonElement>) => {
   e.preventDefault();
 
   if (message.length < 1) {
@@ -284,12 +233,17 @@ const sendMessage = async (e) => {
     }
 
     setIsLoading(false);
-  } catch (error) {
+  } catch (error: unknown) {
     console.error(error);
-    setErrorMessage(error.message);
+    if (error instanceof Error) {
+      setErrorMessage(error.message);
+    } else {
+      setErrorMessage("An unknown error occurred.");
+    }
     setIsLoading(false);
   }
-};
+  }
+
 
 const logConversationDetails = () => {
   console.log("Conversation:", conversation);
@@ -304,7 +258,7 @@ const handleKeypress = (e: any) => {
 };
 
 // Open modal with pre-filled question
-const openEditModal = (messageId, question) => {
+const openEditModal = (messageId: string, question: string) => {
   setEditingMessageId(messageId);
   setEditQuestion(question);
   setNewAnswer("");
@@ -321,7 +275,7 @@ const closeEditModal = () => {
 };
 
 // Handle question changes
-const handleQuestionChange = (e) => {
+const handleQuestionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
   const updatedQuestion = e.target.value;
   setEditQuestion(updatedQuestion);
   setIsSubmitDisabled(updatedQuestion === conversation.find(msg => msg.id === editingMessageId).question);
@@ -378,13 +332,13 @@ const acceptChanges = async () => {
       )
     );
 
-    closeEditModal();
-  } catch (error) {
-    console.error(error.message);
-  }
+  closeEditModal();
+} catch (error) {
+  console.error((error as Error).message); // Type assertion to Error
+}
 };
 
-const openViewEditedModal = (id, question, answer) => {
+const openViewEditedModal = (id: number, question: string, answer: string) => {
   setViewEditedQuestion(question);
   setViewEditedAnswer(answer);
   setIsViewEditedModalOpen(true);
@@ -418,10 +372,8 @@ const closeViewEditedModal = () => {
             {!showEmptyChat && conversation.length > 0 ? (
               <div className="flex flex-col items-center text-sm bg-gray-800">
                 <a 
-  // onClick={logConversationDetails}
   onClick={toggleModal}
   className="flex py-3 mt-4 px-3 items-center gap-3 rounded-md hover:bg-gray-500/10 transition-colors duration-200 text-white cursor-pointer text-sm mb-1 flex-shrink-0 border border-white/20">
-  {/* <AiOutlinePlus className="h-4 w-4" /> */}
   Visualizer
 </a>
 
@@ -686,7 +638,6 @@ const closeViewEditedModal = () => {
     </div>
   </div>
 )}
-
     </div>
     
   );

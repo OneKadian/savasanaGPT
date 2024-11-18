@@ -11,12 +11,17 @@ import Box from "@mui/material/Box";
 import { supabase } from "@/supabase/supabaseRequests";
 import { AiOutlinePlus } from "react-icons/ai";
 
+interface Conversation {
+  firstQuestion: string;
+  id: string;
+}
+
 export default function Home() {
   const [isComponentVisible, setIsComponentVisible] = useState(false);
-  const [selectedConversationId, setSelectedConversationId] = useState(null);
+  const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
 
   const { userId } = useAuth();
-  const [conversations, setConversations] = useState([]);
+  const [conversations, setConversations] = useState<Conversation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
 useEffect(() => {
