@@ -76,18 +76,18 @@ useEffect(() => {
   New chat
 </a>
 
-    {conversations.map((conversation) => (
-<a
-  key={conversations.indexOf(conversation)}
-  onClick={() => setSelectedConversationId(conversation.id)}
-  className="flex py-3 px-3 items-center gap-3 rounded-md hover:bg-gray-500/10 transition-colors duration-200 text-white cursor-pointer text-sm mb-1 flex-shrink-0 border border-white/20 w-[98%] overflow-hidden whitespace-nowrap text-ellipsis"
->
-  {conversation.firstQuestion.length > 30
-    ? `${conversation.firstQuestion.slice(0, 30)}...`
-    : conversation.firstQuestion}
-</a>
+{userId && conversations.map((conversation) => (
+  <a
+    key={conversations.indexOf(conversation)}
+    onClick={() => setSelectedConversationId(conversation.id)}
+    className="flex py-3 px-3 items-center gap-3 rounded-md hover:bg-gray-500/10 transition-colors duration-200 text-white cursor-pointer text-sm mb-1 flex-shrink-0 border border-white/20 w-[98%] overflow-hidden whitespace-nowrap text-ellipsis"
+  >
+    {conversation.firstQuestion.length > 30
+      ? `${conversation.firstQuestion.slice(0, 30)}...`
+      : conversation.firstQuestion}
+  </a>
+))}
 
-    ))}
   </>
               )}
               {!userId ? (
