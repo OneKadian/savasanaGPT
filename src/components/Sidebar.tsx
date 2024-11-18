@@ -19,8 +19,7 @@ const Sidebar = () => {
   <AiOutlinePlus className="h-4 w-4" />
   New chat
 </a>
-
-        <div className="flex-col flex-1 overflow-y-auto border-b border-white/20">
+  <div className="flex-col flex-1 overflow-y-auto border-b border-white/20">
         </div>
   {!userId ? (
               <Link
