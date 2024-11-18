@@ -96,56 +96,56 @@
     "react-lifecycles-compat" "^3.0.4"
     "warning" "^3.0.0"
 
-"@clerk/backend@1.16.1":
-  "integrity" "sha512-Rrw8LLHk5L1gHhWT/nr5zuWvPapvgdTZ4O35v22D8eLaTdYLJOptHquBwaJ9R9WMmYxDi35lm9a4oVk0t5h7BQ=="
-  "resolved" "https://registry.npmjs.org/@clerk/backend/-/backend-1.16.1.tgz"
-  "version" "1.16.1"
+"@clerk/backend@1.17.0":
+  "integrity" "sha512-rqeyF217p4GiUKmi+9/wIlWcW2ybaskcwohtSHuuuMmH+kW46ITGSymjka+1bcni/2mHNqxl6RmpQEGK2ncmtQ=="
+  "resolved" "https://registry.npmjs.org/@clerk/backend/-/backend-1.17.0.tgz"
+  "version" "1.17.0"
   dependencies:
-    "@clerk/shared" "2.12.1"
-    "@clerk/types" "4.32.0"
+    "@clerk/shared" "2.15.0"
+    "@clerk/types" "4.34.0"
     "cookie" "0.7.0"
     "snakecase-keys" "5.4.4"
     "tslib" "2.4.1"
 
-"@clerk/clerk-react@5.15.3":
-  "integrity" "sha512-Ha7Cjiffk3GT0+lJgrtJfeTC9P1kIdmErjQc0t6+lcx12qZwnO1fsf5fp6GND6+P+VtjbgGOPrQmPoJoEcI3cA=="
-  "resolved" "https://registry.npmjs.org/@clerk/clerk-react/-/clerk-react-5.15.3.tgz"
-  "version" "5.15.3"
+"@clerk/clerk-react@5.16.0":
+  "integrity" "sha512-u2RocKKBDjygFv0v/qo8JMEsINKpHoDa1cA9ldAnXJHNlQFO66hH0Ax1gPKtafttthzVug237jiX7lGKifMoDw=="
+  "resolved" "https://registry.npmjs.org/@clerk/clerk-react/-/clerk-react-5.16.0.tgz"
+  "version" "5.16.0"
   dependencies:
-    "@clerk/shared" "2.12.1"
-    "@clerk/types" "4.32.0"
+    "@clerk/shared" "2.15.0"
+    "@clerk/types" "4.34.0"
     "tslib" "2.4.1"
 
-"@clerk/nextjs@^6.3.1":
-  "integrity" "sha512-OEws5LiKYamiC+kaLUxBVz8KKXimzz+iJoVrA0+6iPn4ouve3TsVWOt9lkBLnpDX4ayqYDrGu7Wnj/ZEGVxqmg=="
-  "resolved" "https://registry.npmjs.org/@clerk/nextjs/-/nextjs-6.3.1.tgz"
-  "version" "6.3.1"
+"@clerk/nextjs@^6.4.0":
+  "integrity" "sha512-M79Zjhf/QXQh8hFcsFDbzOqXnA3+YwCx/97YjDj+PwPE7uuqzGgPfnqRAwwcher7A2bWi6x+Bb7O/y6VjAkNCQ=="
+  "resolved" "https://registry.npmjs.org/@clerk/nextjs/-/nextjs-6.4.0.tgz"
+  "version" "6.4.0"
   dependencies:
-    "@clerk/backend" "1.16.1"
-    "@clerk/clerk-react" "5.15.3"
-    "@clerk/shared" "2.12.1"
-    "@clerk/types" "4.32.0"
+    "@clerk/backend" "1.17.0"
+    "@clerk/clerk-react" "5.16.0"
+    "@clerk/shared" "2.15.0"
+    "@clerk/types" "4.34.0"
     "crypto-js" "4.2.0"
     "ezheaders" "0.1.0"
     "server-only" "0.0.1"
     "tslib" "2.4.1"
 
-"@clerk/shared@2.12.1":
-  "integrity" "sha512-ezX/BXnMJ1rH7vX4H3nXpZ3WW8m1lbyri5dHOoDlREUOe/zr9lawUgVx+75aTxrVPtK7u8XwzMj/rT2cMfMmqw=="
-  "resolved" "https://registry.npmjs.org/@clerk/shared/-/shared-2.12.1.tgz"
-  "version" "2.12.1"
+"@clerk/shared@2.15.0":
+  "integrity" "sha512-aO1l9mYiz9ZVU8hOJKg5fTeyVVm2NLdGlwSROhOgWVzJ/0FcfmQfuMkiMC7ZwRUQb9jqdGj5Kdb4QxUFJNCkyA=="
+  "resolved" "https://registry.npmjs.org/@clerk/shared/-/shared-2.15.0.tgz"
+  "version" "2.15.0"
   dependencies:
-    "@clerk/types" "4.32.0"
+    "@clerk/types" "4.34.0"
     "dequal" "2.0.3"
     "glob-to-regexp" "0.4.1"
     "js-cookie" "3.0.5"
     "std-env" "^3.7.0"
     "swr" "^2.2.0"
 
-"@clerk/types@4.32.0":
-  "integrity" "sha512-6oqRJsQE8GIThVyPBAO0kJP0pZJ1c11Hz0qabDk9lStoxjHy7fRIcIm/JX5xlA6rjilWBMEgJr4C0a36mJvVXg=="
-  "resolved" "https://registry.npmjs.org/@clerk/types/-/types-4.32.0.tgz"
-  "version" "4.32.0"
+"@clerk/types@4.34.0":
+  "integrity" "sha512-4ghDvf80/sFlpx5HnmIl3vW7SOqEaTDwyKAw64H/E2ahgGUMk+qLVpxnBumTpowq+bGjfMVwbneDQOhtmYidoQ=="
+  "resolved" "https://registry.npmjs.org/@clerk/types/-/types-4.34.0.tgz"
+  "version" "4.34.0"
   dependencies:
     "csstype" "3.1.1"
 
@@ -3188,10 +3188,10 @@
     "for-each" "^0.3.3"
     "is-typed-array" "^1.1.9"
 
-"typescript@>=2.8.0 || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.6.0-beta || >= 3.7.0-dev || >= 3.7.0-beta", "typescript@>=3.3.1", "typescript@5.0.4":
-  "integrity" "sha512-cW9T5W9xY37cc+jfEnaUvX91foxtHkza3Nw3wkoF4sSlKn0MONdkdEndig/qPBWXNkmplh3NzayQzCiHM4/hqw=="
-  "resolved" "https://registry.npmjs.org/typescript/-/typescript-5.0.4.tgz"
-  "version" "5.0.4"
+"typescript@^5.6.3", "typescript@>=2.8.0 || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.6.0-beta || >= 3.7.0-dev || >= 3.7.0-beta", "typescript@>=3.3.1":
+  "integrity" "sha512-hjcS1mhfuyi4WW8IWtjP7brDrG2cuDZukyrYrSauoXGNgx0S7zceP07adYkJycEr56BOUTNPzbInooiN3fn1qw=="
+  "resolved" "https://registry.npmjs.org/typescript/-/typescript-5.6.3.tgz"
+  "version" "5.6.3"
 
 "unbox-primitive@^1.0.2":
   "integrity" "sha512-61pPlCD9h51VoreyJ0BReideM3MDKMKnh6+V9L08331ipq6Q8OFXZYiqP6n/tbHx4s5I9uRhcye6BrbkizkBDw=="
